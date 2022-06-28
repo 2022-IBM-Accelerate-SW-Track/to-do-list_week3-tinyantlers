@@ -1,13 +1,15 @@
 import React, { Component } from "react";
 import { Button, TextField } from "@mui/material";
-
+import { DesktopDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 class AddTodo extends Component {
   // Create a local react state of the this component with both content date property set to nothing.
   constructor() {
     super();
     this.state = {
       content: "",
-      date: ""
+      date: "",
+      due: null,
     };
   }
   // The handleChange function updates the react state with the new input value provided from the user and the current date/time.
@@ -16,9 +18,19 @@ class AddTodo extends Component {
   handleChange = (event) => {
     this.setState({
       content: event.target.value,
-      date: Date().toLocaleString('en-US')
+      date: new Date().toLocaleString("en-US"),
     });
   };
+  // + Create a new handleChange function for the datepicker to set the value of your due date. You are free to name this function.
+  // 1. (Hint: use handleChange as a template. Don't forget to remove the content and date values. You won't need that here.)
+  // 2. Note that the value from the the date picker will give more that just the date in mm/dd/yyyy. To format the date we need set the due date variable to `new Date(event).toLocaleDateString()`
+  handleDueDateChange = (event) => {
+    this.setState({
+      // content: event.target.value,
+      due: new Date(event).toLocaleDateString(),
+    });
+  };
+
   // The handleSubmit function collects the forms input and puts it into the react state.
   // event.preventDefault() is called to prevents default event behavior like refreshing the browser.
   // this.props.addTodo(this.state) passes the current state (or user input and current date/time) into the addTodo function defined
@@ -29,7 +41,9 @@ class AddTodo extends Component {
       this.props.addTodo(this.state);
       this.setState({
         content: "",
-        date: ""
+        date: "",
+        due: null,
+        // - Finally reset the value of the duedate to null in the `onSubmit` function
       });
     }
   };
@@ -49,6 +63,17 @@ class AddTodo extends Component {
           onChange={this.handleChange}
           value={this.state.content}
         />
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <DesktopDatePicker
+            id="new-item-date"
+            label="Due Date"
+            // + Replace `\*value*\` with the new state variable.
+            value={this.state.due}
+            // + Change `\*OnChange*\` to the new handle function that you created.
+            onChange={this.handleDueDateChange}
+            renderInput={(params) => <TextField {...params} />}
+          />
+        </LocalizationProvider>
         <Button
           style={{ marginLeft: "10px" }}
           onClick={this.handleSubmit}
