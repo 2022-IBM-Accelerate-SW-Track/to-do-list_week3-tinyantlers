@@ -31,15 +31,22 @@ import {
 // 4. Think of lines 14-23 as a loop. For each todo in the todo list, we want to give the list item
 // a key, and it's own card shown in the UI
 const Todos = ({ todos, deleteTodo }) => {
+  const nowDate = new Date();
   const todoList = todos.length ? (
     todos.map((todo) => {
-      // new date(dueDate);
+      let cardColor = "#ffffff";
+
+      console.log("due: ", todo.due);
+
+      if (new Date(todo.due) < nowDate) {
+        cardColor = "red";
+      }
 
       return (
         <Grid key={todo.id}>
           <Card
             data-testid={todo.content}
-            style={{ marginTop: 10, background: "color" }}
+            style={{ marginTop: 10, backgroundColor: cardColor }}
           >
             {/* Remember, we set the local state of this todo item when the user submits the form in 
             AddTodo.js. All we need to do is return the todo list item {todo.content} as well as its 
@@ -52,7 +59,7 @@ const Todos = ({ todos, deleteTodo }) => {
               <ListItemText
                 style={{ marginTop: 10 }}
                 primary={todo.content}
-                secondary={todo.date}
+                secondary={todo.due}
               />
             </ListItemButton>
           </Card>
