@@ -4,11 +4,15 @@ import AddTodo from "../component/AddTodo";
 import "../pages/Home.css";
 
 class Home extends Component {
-  // Create a default state of this component with an empty list of todos.
+  // A default state of this component with an empty list of todos.
   constructor() {
     super();
     this.state = {
-      todos: [],
+      todos: [
+        // { id: 0, content: "TEST" },
+        // { id: 1, content: "egg" },
+        // { id: 2, content: "water" },
+      ],
     };
   }
 
@@ -28,13 +32,42 @@ class Home extends Component {
   // the addTodo function simply creates a new array that includes the user submitted todo item and then
   // updates the state with the new list.
   addTodo = (todo) => {
-    const exists = this.state.todos.find(t => t.content === todo.content);
-    if (exists){ return }
+    // const exists = this.state.todos.find((t) => t.content === todo.content);
+    // if (exists) {
+    //   return;
+    // }
+
     // In React, keys or ids in a list help identify which items have changed, been added or removed. Keys
     // should not share duplicate values.
     // To avoid having dup values, we use the Math.random() function to generate a random value for a todo id.
     // This solution works for a small application but a more complex hashing function should be used when
     // dealing with a larger data sensitive project.
+    const currentContent = todo.content;
+
+    function todoExists(todoInput) {
+      return todoInput.content === currentContent;
+    }
+    if (this.state.todos.find(todoExists)) return;
+
+    // - We need to go to `src/pages/Home.js` and go to the `addTodo` function where we made sure no duplicate tasks were added.
+    //    (Hint:  The date picker will give us three values: A valid date in string form, `"Invalid Date"` or `null`.)
+    //    Create a check for `"Invalid Date"` or `null` so no task is made.
+    // 1. Recall the psudeo code from week 2
+    // ```
+    // if (null or "Invalid Date" in todo list) {
+    //     do nothing and just return
+    //     to break out the function
+    // } else {
+    //     perform the action to add
+    //     the item to the Todo list }
+    // ```
+
+    if (todo.due === "Invalid Date") {
+      return;
+    }
+
+    // *** didnt do null check? test later
+
     todo.id = Math.random();
     // Create a array that contains the current array and the new todo item
     let new_list = [...this.state.todos, todo];
